@@ -10,8 +10,14 @@
 
 # production
 /build
+/dist
+
+# Android / Capacitor build artifacts
+/android/build
+/android/app/build
 
 # misc
+.vscode/
 .DS_Store
 .env.local
 .env.development.local
