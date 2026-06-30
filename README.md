@@ -1,70 +1,88 @@
-# Getting Started with Create React App
+﻿# LaserPix
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+LaserPix is a cross-platform laser controller app built with React and Electron, with support for USB serial and WiFi/TCP connections to embedded laser hardware.
 
-## Available Scripts
+This repository contains the source, desktop packaging setup, and Android/Capacitor support for a hybrid LaserPix application.
 
-In the project directory, you can run:
+## What this app does
+- Scans and connects to laser controllers over USB serial
+- Supports ESP32, Arduino Uno, Arduino Mega, and generic GRBL hardware profiles
+- Provides fallback WiFi/TCP connectivity for network-enabled laser modules
+- Packages as a native Windows desktop app using Electron
+- Includes mobile/PWA compatibility through Capacitor and WebSocket support
 
-### `npm start`
+## Tech stack
+- JavaScript, HTML, CSS, JSX
+- React 19 + Create React App
+- Electron 39 for desktop app shell
+- serialport for USB device communication
+- Node `net` module for TCP/WiFi sockets
+- Capacitor Android for mobile/PWA support
+- electron-builder for Windows installer packaging
+- React Testing Library for UI testing
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Setup
+1. Install dependencies:
+   ```powershell
+   npm install
+   ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. Start development mode:
+   ```powershell
+   npm run electron:dev
+   ```
 
-### `npm test`
+   This starts the React dev server and opens Electron together.
+   - The terminal must remain open while you develop in this mode.
+   - This is normal for development.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## How dev mode works
+- `npm run electron:dev` runs two processes:
+  1. React development server (`npm start`)
+  2. Electron desktop app that loads `http://localhost:3000`
+- The app will not work if the dev server is not running or if the terminal is closed.
+- That is why `electron:dev` is only for development and debugging.
 
-### `npm run build`
+## Run the actual app without the dev server
+To run LaserPix like a real installed program, build and package it:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Build the React app:
+   ```powershell
+   npm run build
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Package the desktop app:
+   ```powershell
+   npm run electron:pack
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Install the generated Windows package from `dist/`.
 
-### `npm run eject`
+After installation, LaserPix runs without needing a terminal or dev server.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Important commands
+- `npm install` — install dependencies
+- `npm run electron:dev` — development mode with live reload
+- `npm run build` — create production React build
+- `npm run electron:pack` — package the app for Windows
+- `npm test` — run UI tests
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Notes for users
+- If you are running from source, always use `npm run electron:dev` during development.
+- If you want a standalone program, use `npm run electron:pack` and install the app.
+- Do not try to open `main.js` directly. Electron needs the built files or the dev server to work correctly.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Repository layout
+- `src/` — React app source
+- `public/` — static frontend assets
+- `main.js` — Electron main process
+- `preload.js` — secure Electron renderer bridge
+- `android/` — Capacitor Android project files
+- `package.json` — project scripts and dependencies
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Support
+If the app does not start, check these first:
+- `npm install` has completed successfully
+- You ran `npm run electron:dev` for development
+- You ran `npm run build` and `npm run electron:pack` for a production build
+- `dist/` exists only after packaging
